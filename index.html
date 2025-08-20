@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Toko Online Premium</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #0d1117, #1e3a8a);
+      color: white;
+    }
+    header {
+      background: #0f172a;
+      padding: 15px;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+      color: #60a5fa;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+    .product {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 12px rgba(0,0,0,0.5);
+      transition: 0.3s;
+    }
+    .product:hover {
+      transform: scale(1.05);
+    }
+    .product img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background: #1e40af;
+    }
+    #cart {
+      background: #0f172a;
+      padding: 20px;
+      margin: 20px;
+      border-radius: 12px;
+    }
+    #cart h2 {
+      margin-top: 0;
+      color: #60a5fa;
+    }
+    #checkoutBtn {
+      background: #10b981;
+    }
+    #checkoutBtn:hover {
+      background: #059669;
+    }
+  </style>
+</head>
+<body>
+  <header>🛒 Toko Fashion Premium</header>
+
+  <div class="container">
+    <div class="product">
+      <img src="https://i.ibb.co/MNZxhzR/hoodie.jpg" alt="Hoodie Hitam">
+      <h3>Hoodie Hitam Exclusive</h3>
+      <p>Rp150000</p>
+      <button onclick="addToCart('Hoodie Hitam', 150000)">Tambah ke Keranjang</button>
+    </div>
+
+    <div class="product">
+      <img src="https://i.ibb.co/ZXN1d2x/sneakers.jpg" alt="Sneakers Putih Biru">
+      <h3>Sneakers Putih Biru</h3>
+      <p>Rp200000</p>
+      <button onclick="addToCart('Sneakers Putih Biru', 200000)">Tambah ke Keranjang</button>
+    </div>
+
+    <div class="product">
+      <img src="https://i.ibb.co/wWvzmQ3/watch.jpg" alt="Jam Tangan Elegan">
+      <h3>Jam Tangan Elegan</h3>
+      <p>Rp300000</p>
+      <button onclick="addToCart('Jam Tangan Elegan', 300000)">Tambah ke Keranjang</button>
+    </div>
+  </div>
+
+  <div id="cart">
+    <h2>🛍️ Keranjang Belanja</h2>
+    <ul id="cartItems"></ul>
+    <p><strong>Total:</strong> Rp<span id="total">0</span></p>
+    <button id="checkoutBtn" onclick="checkout()">Checkout via WhatsApp</button>
+  </div>
+
+  <script>
+    // 👉 Ganti nomor WA kamu di sini (pakai format 62)
+    let nomorWA = "6287842446681"; 
+
+    let cart = [];
+
+    function addToCart(nama, harga) {
+      let item = cart.find(p => p.nama === nama);
+      if (item) {
+        item.qty++;
+      } else {
+        cart.push({ nama: nama, harga: harga, qty: 1 });
+      }
+      updateCart();
+    }
+
+    function updateCart() {
+      let cartList = document.getElementById("cartItems");
+      let total = 0;
+      cartList.innerHTML = "";
+      cart.forEach(item => {
+        let li = document.createElement("li");
+        li.textContent = `${item.nama} x${item.qty} = Rp${item.harga * item.qty}`;
+        cartList.appendChild(li);
+        total += item.harga * item.qty;
+      });
+      document.getElementById("total").textContent = total;
+    }
+
+    function checkout() {
+      if (cart.length === 0) {
+        alert("Keranjang masih kosong!");
+        return;
+      }
+
+      let pesan = "Halo, saya ingin order:\n";
+      let total = 0;
+      cart.forEach(item => {
+        pesan += `${item.nama} x${item.qty} = Rp${item.harga * item.qty}\n`;
+        total += item.harga * item.qty;
+      });
+      pesan += `Total: Rp${total}`;
+
+      // ✅ lebih aman: pakai API WhatsApp universal
+      let url = `https://api.whatsapp.com/send?phone=${6287842446681}&text=${encodeURIComponent(pesan)}`;
+      window.location.href = url;
+    }
+  </script>
+</body>
+</html>
